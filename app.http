@@ -1,0 +1,23 @@
+###
+POST http://localhost:3000/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre": "pepe",
+    "apellido": "Hernández",
+    "email": "oscar@gmail.com",
+    "contrasenia": "Poter551147481$",
+    "confirmarContrasenia": "Poter551147481$"
+}
+
+###
+POST http://localhost:3000/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "oscar@gmail.com",
+    "contrasenia": "Poter551147481$"
+}
+
+###
+GET http://localhost:3000/user HTTP/1.1
