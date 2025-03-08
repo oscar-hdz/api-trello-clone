@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
 import { router } from "./routes/user.js";
+import { router as routerTablero } from "./routes/tableros.js";
 import { corsMiddleware } from "./middleware/cors.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -40,6 +41,7 @@ app.use(
 );
 
 app.use("", router);
+app.use("", routerTablero);
 
 app.get("/", (req, res) => {
   res.send("Welcome to my API");

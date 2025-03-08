@@ -1,4 +1,4 @@
-###
+### Crear Usuario
 POST http://localhost:3000/user HTTP/1.1
 Content-Type: application/json
 
@@ -10,7 +10,7 @@ Content-Type: application/json
     "confirmarContrasenia": "Poter551147481$"
 }
 
-###
+### Iniciar sesión
 POST http://localhost:3000/login HTTP/1.1
 Content-Type: application/json
 
@@ -19,5 +19,22 @@ Content-Type: application/json
     "contrasenia": "Poter551147481$"
 }
 
-###
+### Obtener todos los usuarios
 GET http://localhost:3000/user HTTP/1.1
+
+### Crear un tablero
+POST http://localhost:3000/tablero
+Content-Type: application/json
+
+{
+	"idUsuario": "67c76eb589ff57316d3c81b6",
+	"nombre": "Proyecto",
+    "listas": [{
+        "nombre": "Por hacer",
+        "tarjetas": [{
+            "nombre": "Tarea 1",
+            "description": "lorem",
+        }]
+    }]
+}
+
