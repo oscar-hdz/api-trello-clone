@@ -4,18 +4,18 @@ import mongoose from "mongoose";
 
 export const router = express.Router();
 
-router.get("/tablero", async (req, res) => {
-  try {
-    const tableros = await Tablero.find();
-    res.json(tableros);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// router.get("/tablero", async (req, res) => {
+//   try {
+//     const tableros = await Tablero.find();
+//     res.json(tableros);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 router.get("/tablero", async (req, res) => {
   const { idUsuario } = req.query;
-  console.log("ID de usuario recibido:", idUsuario);
+  // console.log("ID de usuario recibido:", idUsuario);
   try {
     if (!mongoose.Types.ObjectId.isValid(idUsuario)) {
       return res.status(400).json({ message: "ID de usuario requerido" });
@@ -52,7 +52,8 @@ router.post("/tablero", async (req, res) => {
       nombre,
     });
     await tablero.save();
-    res.status(201).json({ message: "Tablero creado exitosamente" });
+    // res.status(201).json({ message: "Tablero creado exitosamente" });
+    res.status(201).json(tablero);
   } catch (error) {
     console.error("Error en POST /tablero:", error);
     res.status(500).json({ message: "Error al crear tablero" });
@@ -60,7 +61,7 @@ router.post("/tablero", async (req, res) => {
 });
 
 router.post("/lista/:tableroId", async (req, res) => {
-  console.log("Datos recibidos:", req.body);
+  console.log("Datos recibidos:", req.body, req.params);
   try {
     const { tableroId } = req.params;
     const { titulo } = req.body;
@@ -78,6 +79,73 @@ router.post("/lista/:tableroId", async (req, res) => {
     }
 
     res.status(201).json(tablero);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/lista/:tableroId", async (req, res) => {
+  console.log("Datos recibidos para las listas: ", req.params);
+  try {
+    const { tableroId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(tableroId)) {
+      return res.status(400).json({ message: "ID de tablero inválido" });
+    }
+    const tablero = await Tablero.findById(tableroId);
+    if (!tablero) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+    console.log("Listas del tablero:", tablero.listas);
+    res.json(tablero.listas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/tarjeta/:listaId", async (req, res) => {
+  console.log("Id de la lista para la tarjeta: ", req.params);
+  console.log("Datos recibidos para la tarjeta: ", req.body);
+  try {
+    const { listaId } = req.params;
+    const { titulo, descripcion, prioridad } = req.body;
+
+    const nuevaTarjeta = { titulo, descripcion, prioridad };
+
+    const tablero = await Tablero.findOne({ "listas._id": listaId });
+    if (!tablero) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+
+    // Encuentra la lista dentro del tablero y agrega la tarjeta
+    const lista = tablero.listas.id(listaId);
+    if (!lista) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+
+    lista.cards.push(nuevaTarjeta);
+
+    // Guarda los cambios en el tablero
+    await tablero.save();
+
+    res.status(201).json(lista);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/tarjeta/:listaId", async (req, res) => {
+  console.log("Id de la lista para la tarjeta: ", req.params);
+  try {
+    const { listaId } = req.params;
+    const tablero = await Tablero.findOne({ "listas._id": listaId });
+    if (!tablero) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+    const lista = tablero.listas.id(listaId);
+    if (!lista) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+    res.json(lista.cards);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

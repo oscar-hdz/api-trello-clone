@@ -7,7 +7,11 @@ const cardSchema = new mongoose.Schema({
   },
   descripcion: {
     type: String,
-    required: true,
+    //required: true,
+  },
+  prioridad: {
+    type: String,
+    //required: true,
   },
   fechaCreacion: {
     type: Date,
