@@ -150,3 +150,61 @@ router.get("/tarjeta/:listaId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.patch("/lista/sortable/:listaId", async (req, res) => {
+  console.log("Datos recibidos para ordenar tarjetas: ", req.body);
+  console.log("Id de la lista: ", req.params.listaId);
+
+  try {
+    const { listaId } = req.params;
+    const { cards, oldIndex, newIndex } = req.body;
+    console.log("Tarjetas recibidas: ", cards);
+    console.log("Índices de ordenamiento: ", oldIndex, newIndex);
+
+    // Verificar que se envió el array de tarjetas y los índices
+    if (!Array.isArray(cards)) {
+      return res
+        .status(400)
+        .json({ message: "No se recibieron tarjetas válidas" });
+    }
+    if (oldIndex === undefined || newIndex === undefined) {
+      return res
+        .status(400)
+        .json({ message: "Faltan índices de ordenamiento" });
+    }
+
+    const tablero = await Tablero.findOne({ "listas._id": listaId });
+    if (!tablero) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+
+    const lista = tablero.listas.id(listaId);
+    if (!lista) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+
+    // Verificar que los índices están dentro de los límites
+    if (
+      oldIndex < 0 ||
+      newIndex < 0 ||
+      oldIndex >= lista.cards.length ||
+      newIndex >= lista.cards.length
+    ) {
+      return res.status(400).json({ message: "Índices fuera de rango" });
+    }
+
+    // Reordenar las tarjetas en la lista
+    const card = lista.cards.splice(oldIndex, 1)[0]; // Extraer tarjeta
+    lista.cards.splice(newIndex, 0, card); // Insertar en nueva posición
+
+    console.log("Tarjetas ordenadas: ", lista.cards);
+
+    // Guardar cambios en la base de datos
+    await tablero.save();
+
+    res.json({ message: "Tarjetas reordenadas correctamente", lista });
+  } catch (error) {
+    console.error("Error al ordenar tarjetas:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
