@@ -38,3 +38,20 @@ Content-Type: application/json
     }]
 }
 
+### Obtener tableros por id de usuario
+GEt http://localhost:3000/tablero?67c76eb589ff57316d3c81b6
+
+### Eliminar Tablero
+DELETE http://localhost:3000/tablero/67d60614f622b44bf0133987
+
+### Eliminar Listas
+DELETE http://localhost:3000/lista/67e47ee58958ef794d2691b4
+
+### Crear Tarjeta
+POST http://localhost:3000/tarjeta/67e4d2108ed20ac20751ea2e
+Content-Type: application/json
+{
+    "titulo": "Tarea 1",
+    "descripcion": "Terminar la tarea",
+    "prioridad": "Alto",
+}

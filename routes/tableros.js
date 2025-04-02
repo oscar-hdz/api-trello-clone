@@ -15,7 +15,7 @@ export const router = express.Router();
 
 router.get("/tablero", async (req, res) => {
   const { idUsuario } = req.query;
-  // console.log("ID de usuario recibido:", idUsuario);
+  //console.log("ID de usuario recibido:", idUsuario);
   try {
     if (!mongoose.Types.ObjectId.isValid(idUsuario)) {
       return res.status(400).json({ message: "ID de usuario requerido" });
@@ -41,7 +41,7 @@ router.get("/tablero/:id", async (req, res) => {
 
 router.post("/tablero", async (req, res) => {
   try {
-    console.log("Datos recibidos:", req.body);
+    console.log("Datos recibidos xD:", req.body);
     const { idUsuario, nombre } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(idUsuario)) {
@@ -60,13 +60,18 @@ router.post("/tablero", async (req, res) => {
   }
 });
 
+// Ruta para crear una lista en un tablero
 router.post("/lista/:tableroId", async (req, res) => {
-  console.log("Datos recibidos:", req.body, req.params);
+  console.log("Datos recibidos para crear una lista:", req.body, req.params);
   try {
     const { tableroId } = req.params;
     const { titulo } = req.body;
 
-    const nuevaLista = { titulo, tarjetas: [] }; // Creamos la lista sin tarjetas
+    const nuevaLista = {
+      _id: new mongoose.Types.ObjectId(),
+      titulo,
+      tarjetas: [],
+    }; // Generamos un ID manualmente
 
     const tablero = await Tablero.findByIdAndUpdate(
       tableroId,
@@ -78,12 +83,18 @@ router.post("/lista/:tableroId", async (req, res) => {
       return res.status(404).json({ message: "Tablero no encontrado" });
     }
 
-    res.status(201).json(tablero);
+    // Buscar la lista recién agregada y devolverla
+    const listaAgregada = tablero.listas.find((lista) =>
+      lista._id.equals(nuevaLista._id)
+    );
+
+    res.status(201).json(listaAgregada);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
+// Ruta para obtener las listas de un tablero
 router.get("/lista/:tableroId", async (req, res) => {
   console.log("Datos recibidos para las listas: ", req.params);
   try {
@@ -102,6 +113,7 @@ router.get("/lista/:tableroId", async (req, res) => {
   }
 });
 
+//Ruta para crear una tarjeta en una lista
 router.post("/tarjeta/:listaId", async (req, res) => {
   console.log("Id de la lista para la tarjeta: ", req.params);
   console.log("Datos recibidos para la tarjeta: ", req.body);
@@ -109,7 +121,12 @@ router.post("/tarjeta/:listaId", async (req, res) => {
     const { listaId } = req.params;
     const { titulo, descripcion, prioridad } = req.body;
 
-    const nuevaTarjeta = { titulo, descripcion, prioridad };
+    const nuevaTarjeta = {
+      _id: new mongoose.Types.ObjectId(),
+      titulo,
+      descripcion,
+      prioridad,
+    };
 
     const tablero = await Tablero.findOne({ "listas._id": listaId });
     if (!tablero) {
@@ -127,12 +144,13 @@ router.post("/tarjeta/:listaId", async (req, res) => {
     // Guarda los cambios en el tablero
     await tablero.save();
 
-    res.status(201).json(lista);
+    res.status(201).json(nuevaTarjeta);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
+//Ruta para obtener las tarjetas de una lista
 router.get("/tarjeta/:listaId", async (req, res) => {
   console.log("Id de la lista para la tarjeta: ", req.params);
   try {
@@ -176,6 +194,85 @@ router.patch("/lista/sortable/:listaId", async (req, res) => {
     await tablero.save();
 
     res.json(tablero);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//Eliminar Tablero
+router.delete("/tablero/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tablero = await Tablero.findByIdAndDelete(id);
+    if (tablero) {
+      res
+        .status(200)
+        .json({ message: `Tablero con id: ${id} eliminado exitosamente` });
+    } else {
+      res.status(404).json({ message: "Tablero no encontrado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//Eliminar Listas
+router.delete("/lista/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tablero = await Tablero.findOneAndUpdate(
+      { "listas._id": id },
+      { $pull: { listas: { _id: id } } },
+      { new: true }
+    );
+    if (tablero) {
+      res.status(200).json(tablero.listas);
+    } else {
+      res.status(404).json({ message: "Lista no encontrada" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//Eliminar tarjetas
+router.delete("/tarjeta/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("Id de la tarjeta a eliminar: ", id);
+
+    // 1️⃣ Buscar el tablero que contiene la tarjeta
+    const tablero = await Tablero.findOne({ "listas.cards._id": id });
+
+    if (!tablero) {
+      return res.status(404).json({ message: "Tarjeta no encontrada" });
+    }
+
+    // 2️⃣ Encontrar la lista que contiene la tarjeta
+    const listaAfectada = tablero.listas.find((lista) =>
+      lista.cards.some((card) => card._id.toString() === id)
+    );
+
+    if (!listaAfectada) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+
+    // 3️⃣ Ahora sí eliminamos la tarjeta
+    await Tablero.findOneAndUpdate(
+      { "listas.cards._id": id },
+      { $pull: { "listas.$[].cards": { _id: id } } },
+      { new: true }
+    );
+
+    console.log(
+      "Tarjetas restantes en la lista: ",
+      listaAfectada.cards.filter((card) => card._id.toString() !== id)
+    );
+
+    // 4️⃣ Enviar solo las tarjetas restantes de la lista afectada
+    res
+      .status(200)
+      .json(listaAfectada.cards.filter((card) => card._id.toString() !== id));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
