@@ -1,6 +1,9 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
+/* Manejando problemas de CORS */
+import cors from "cors";
+import { corsMiddleware } from "./middleware/cors.js";
 
 dotenv.config();
 
@@ -26,6 +29,7 @@ run().catch(console.dir);
 
 app.use(json());
 app.disable("x-powered-by");
+app.use(corsMiddleware());
 
 app.get("/", (req, res) => {
   res.send("Bienvenido a mi API");
