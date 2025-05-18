@@ -1,0 +1,23 @@
+### Obtener todos los usuarios de la api ✔
+GET http://localhost:3000/user
+
+
+### Crear un nuevo usuario - ✔
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+    "name": "Allison",
+    "lastName": "Reyes",
+    "email":"allison@gmail.com",
+    "password": "AllisonReyes"
+}
+
+### Iniciar sesión - ✔
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "allison@gmail.com",
+    "password": "AllisonReyes"
+}

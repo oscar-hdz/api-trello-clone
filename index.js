@@ -5,6 +5,9 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import { corsMiddleware } from "./middleware/cors.js";
 
+/* Rutas de la API */
+import { userRouter } from "./routes/user.js";
+
 dotenv.config();
 
 const app = express();
@@ -30,6 +33,8 @@ run().catch(console.dir);
 app.use(json());
 app.disable("x-powered-by");
 app.use(corsMiddleware());
+
+app.use("", userRouter);
 
 app.get("/", (req, res) => {
   res.send("Bienvenido a mi API");
