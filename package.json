@@ -2,9 +2,10 @@
   "name": "api-trello-clone",
   "version": "1.0.0",
   "description": "Una API para una aplicación en React de un clon de Trello usando MongoDB y Express",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --watch index.js"
   },
   "keywords": [
     "api",
@@ -14,5 +15,11 @@
     "backend"
   ],
   "author": "Oscar Hernández",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.5.0",
+    "express": "5.1.0",
+    "mongoose": "8.15.0"
+  }
 }
