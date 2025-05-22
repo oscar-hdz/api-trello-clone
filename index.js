@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 /* Manejando problemas de CORS */
 import cors from "cors";
 import { corsMiddleware } from "./middleware/cors.js";
@@ -33,6 +34,7 @@ run().catch(console.dir);
 app.use(json());
 app.disable("x-powered-by");
 app.use(corsMiddleware());
+app.use(cookieParser());
 
 app.use("", userRouter);
 
