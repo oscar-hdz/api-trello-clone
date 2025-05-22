@@ -8,6 +8,7 @@ import { corsMiddleware } from "./middleware/cors.js";
 
 /* Rutas de la API */
 import { userRouter } from "./routes/user.js";
+import { kanbanRouter } from "./routes/kanban.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(corsMiddleware());
 app.use(cookieParser());
 
 app.use("", userRouter);
+app.use("", kanbanRouter);
 
 app.get("/", (req, res) => {
   res.send("Bienvenido a mi API");

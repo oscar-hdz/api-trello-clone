@@ -37,8 +37,9 @@ const kanbanSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
-    lists: [listSchema],
+    lists: { type: [listSchema] },
   },
   {
     timestamps: true,

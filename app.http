@@ -21,3 +21,57 @@ Content-Type: application/json
     "email": "oscar@gmail.com",
     "password": "Poter5511474815"
 }
+
+### Obtener todos los tableros - ✔
+GET http://localhost:3000/boards
+
+### Obtener tableros por ID del usuario - ✔
+GET http://localhost:3000/boards/682ea049e13b2023a0e3dd29
+
+### Obtener todas las listas - ✔
+GET http://localhost:3000/lists
+
+### Obtener listas por ID del usuario - ✔
+GET http://localhost:3000/lists/682a827e08da709efa43f322
+
+### Obtener todas las tarjetas - ✔
+GET http://localhost:3000/cards
+
+### Obtener tarjetas por ID de usuario
+GET http://localhost:3000/cards/682a827e08da709efa43f322
+
+### Crear nuevo tablero - ✔
+POST http://localhost:3000/boards
+Content-Type: application/json
+
+{
+    "userId": "682ea049e13b2023a0e3dd29",
+    "title": "Proyecto Allison"
+}
+
+### Crear una lista en un tablero por el ID del tablero - ✔
+POST http://localhost:3000/boards/682fa9fcdc9c00b7b6a586e7/lists
+Content-Type: application/json
+
+{
+    "title": "Terminado"
+}
+
+### Crear una tarjeta en una lista por el ID de la lista - ✔
+POST http://localhost:3000/boards/lists/682fad84bebe3847962e8be5/cards
+Content-Type: application/json
+
+{
+    "title": "Terminar el clon de Trello",
+    "description": "Terminar los endpoints de la api",
+    "priority": "Urgente"
+}
+
+### Eliminar una tarjeta - ✔
+DELETE http://localhost:3000/boards/lists/682fad84bebe3847962e8be5/cards/682fb46b44c937992b967da7
+
+### Eliminar una lista
+DELETE http://localhost:3000/boards/682fa9fcdc9c00b7b6a586e7/lists/682faf87e8ffe1cff66e662f
+
+### Eliminar una tablero - ✔
+DELETE http://localhost:3000/boards/682fb056e8ffe1cff66e663f
