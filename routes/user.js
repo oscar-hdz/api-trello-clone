@@ -84,7 +84,7 @@ userRouter.post("/login", async (req, res) => {
 });
 
 // Cerrar Sesión - ✔
-userRouter.post("/logout", (res) => {
+userRouter.post("/logout", (req, res) => {
   res.clearCookie("access_token");
   res.status(200).json({ message: "Sesión cerrada correctamente" });
 });
