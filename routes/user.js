@@ -39,12 +39,34 @@ userRouter.get("/dashboard", authenticateToken, async (req, res) => {
 // Crear un nuevo usuario - ✔
 userRouter.post("/register", async (req, res) => {
   try {
+    const { email } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "El usuario ya existe" });
+    }
+
     const user = new User(req.body);
     user.password = await bcrypt.hash(req.body.password, 10);
     await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    console.log("token", token);
+
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600000,
+    });
+
     res.status(201).json({ message: "Usuario creado correctamente" });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 

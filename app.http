@@ -28,6 +28,9 @@ GET http://localhost:3000/boards
 ### Obtener tableros por ID del usuario - ✔
 GET http://localhost:3000/boards/682ea049e13b2023a0e3dd29
 
+### Obtener tablero por ID del tablero 
+GET http://localhost:3000/boards/682fd94d5cd976911e90f89f/kanban
+
 ### Obtener todas las listas - ✔
 GET http://localhost:3000/lists
 

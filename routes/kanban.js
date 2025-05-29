@@ -26,6 +26,16 @@ kanbanRouter.get("/boards/:userId", async (req, res) => {
   }
 });
 
+//Obtener tablero por ID del tablero - ✔
+kanbanRouter.get("/boards/:kanbanId/kanban", async (req, res) => {
+  try {
+    const kanban = await Kanban.findById(req.params.kanbanId);
+    res.json(kanban);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Obtener todas las listas - ✔
 kanbanRouter.get("/lists", async (req, res) => {
   try {
