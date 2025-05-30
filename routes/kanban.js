@@ -56,6 +56,16 @@ kanbanRouter.get("/lists/:userId", async (req, res) => {
   }
 });
 
+//Obtener listas por ID del Tablero
+kanbanRouter.get("/lists/kanban/:kanbanId", async (req, res) => {
+  try {
+    const lists = await Kanban.findById(req.params.kanbanId);
+    res.json(lists.lists);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //Obtener todas las tarjetas - ✔
 kanbanRouter.get("/cards", async (req, res) => {
   try {

@@ -78,3 +78,6 @@ DELETE http://localhost:3000/boards/682fa9fcdc9c00b7b6a586e7/lists/682faf87e8ffe
 
 ### Eliminar una tablero - ✔
 DELETE http://localhost:3000/boards/682fb056e8ffe1cff66e663f
+
+### Obtener listas por ID del Tablero
+GET http://localhost:3000/lists/kanban/683a22701efb112a900e0570
