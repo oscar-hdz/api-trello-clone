@@ -86,6 +86,27 @@ kanbanRouter.get("/cards/:userId", async (req, res) => {
   }
 });
 
+//Obtener tarjetas por ID de la Lista
+kanbanRouter.get("/cards/lists/:listId", async (req, res) => {
+  try {
+    const { listId } = req.params;
+    const boards = await Kanban.findOne({ "lists._id": listId });
+
+    if (!boards || !boards.length === 0) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+
+    const lists = boards.lists.id(listId);
+
+    if (!lists) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+    res.json(lists.cards);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 /* Métodos POST */
 
 // Crear un nuevo tablero - ✔

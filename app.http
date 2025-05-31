@@ -26,7 +26,7 @@ Content-Type: application/json
 GET http://localhost:3000/boards
 
 ### Obtener tableros por ID del usuario - ✔
-GET http://localhost:3000/boards/682ea049e13b2023a0e3dd29
+GET http://localhost:3000/boards/682a827e08da709efa43f322
 
 ### Obtener tablero por ID del tablero 
 GET http://localhost:3000/boards/682fd94d5cd976911e90f89f/kanban
@@ -80,4 +80,7 @@ DELETE http://localhost:3000/boards/682fa9fcdc9c00b7b6a586e7/lists/682faf87e8ffe
 DELETE http://localhost:3000/boards/682fb056e8ffe1cff66e663f
 
 ### Obtener listas por ID del Tablero
-GET http://localhost:3000/lists/kanban/683a22701efb112a900e0570
+GET http://localhost:3000/lists/kanban/683a11554575cde5159e1461
+
+### Obtener tarjetas por ID de la Lista
+GET http://localhost:3000/cards/lists/683a1e8d52967416c25b37e6
