@@ -218,3 +218,26 @@ kanbanRouter.delete("/boards/lists/:listId/cards/:cardId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Ruta para reordenar las listas
+kanbanRouter.put("/boards/:kanbanId/lists/reorder", async (req, res) => {
+  try {
+    const kanbanId = req.params.kanbanId;
+    const { oldIndex, newIndex } = req.body;
+
+    const kanban = await Kanban.findById(kanbanId);
+
+    if (!kanban) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+
+    const list = kanban.lists[oldIndex];
+
+    kanban.lists.splice(oldIndex, 1);
+    kanban.lists.splice(newIndex, 0, list);
+
+    await kanban.save();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});

@@ -84,3 +84,12 @@ GET http://localhost:3000/lists/kanban/683a11554575cde5159e1461
 
 ### Obtener tarjetas por ID de la Lista
 GET http://localhost:3000/cards/lists/683a1e8d52967416c25b37e6
+
+### Reordenar las listas de un tablero
+PUT http://localhost:3000/boards/683a11554575cde5159e1461/lists/reorder
+Content-Type: application/json
+
+{
+    "oldIndex": 2,
+    "newIndex": 0
+}
