@@ -93,3 +93,12 @@ Content-Type: application/json
     "oldIndex": 2,
     "newIndex": 0
 }
+
+### Reordenar las tajetas dentro de una misma lista
+PUT http://localhost:3000/lists/683a1e8d52967416c25b37e6/cards/reorder
+Content-Type: application/json
+
+{
+    "oldIndex": 0,
+    "newIndex": 1
+}

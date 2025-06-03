@@ -241,3 +241,34 @@ kanbanRouter.put("/boards/:kanbanId/lists/reorder", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//Ruta para reordenar las tarjetas dentro de una misma lista
+kanbanRouter.put("/lists/:listId/cards/reorder", async (req, res) => {
+  console.log("Id de la lista:", req.params.listId);
+  console.log(req.body);
+  try {
+    const listId = req.params.listId;
+    const { oldIndex, newIndex } = req.body;
+    const kanban = await Kanban.findOne({ "lists._id": listId });
+
+    if (!kanban) {
+      return res.status(404).json({ message: "Tablero no encontrado" });
+    }
+
+    const list = kanban.lists.id(listId);
+
+    if (!list) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+
+    console.log(list);
+    const cards = list.cards[oldIndex];
+
+    list.cards.splice(oldIndex, 1);
+    list.cards.splice(newIndex, 0, cards);
+
+    await kanban.save();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
