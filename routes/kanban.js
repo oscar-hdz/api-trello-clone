@@ -272,3 +272,23 @@ kanbanRouter.put("/lists/:listId/cards/reorder", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//Ruta para mover tarjetas de una lista a otra
+kanbanRouter.put("/lists/cards/move", async (req, res) => {
+  try {
+    const { oldIndex, newIndex, activeListId, overListId } = req.body;
+
+    const kanban = await Kanban.findOne({ "lists._id": activeListId });
+    const activeList = kanban.lists.id(activeListId);
+    if (!activeList) {
+      return res.status(404).json({ message: "Lista no encontrada" });
+    }
+    const cards = activeList.cards[oldIndex];
+    activeList.cards.splice(oldIndex, 1);
+    const overList = kanban.lists.id(overListId);
+    overList.cards.splice(newIndex, 0, cards);
+    await kanban.save();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});

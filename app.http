@@ -102,3 +102,14 @@ Content-Type: application/json
     "oldIndex": 0,
     "newIndex": 1
 }
+
+### Mover tarjetas de una lista a otra
+PUT http://localhost:3000/lists/cards/move
+Content-Type: application/json
+
+{
+    "oldIndex":0,
+    "newIndex": 0,
+    "activeListContainer": "683a1eb31efb112a900e051b",
+    "overListContainer": "683ce7b5761b7315aae331ba"
+}
