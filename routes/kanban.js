@@ -182,7 +182,7 @@ kanbanRouter.post("/boards/lists/:listId/cards", async (req, res) => {
 /* Metodos DELETE */
 
 // Eliminar un tablero - ✔
-kanbanRouter.delete("/boards/:kanbanId", async (req, res) => {
+kanbanRouter.delete("/delete/boards/:kanbanId", async (req, res) => {
   try {
     const deletedKanban = await Kanban.findByIdAndDelete(req.params.kanbanId);
     res.status(200).json(deletedKanban);
@@ -192,32 +192,38 @@ kanbanRouter.delete("/boards/:kanbanId", async (req, res) => {
 });
 
 // Eliminar una lista de un tablero - ✔
-kanbanRouter.delete("/boards/:kanbanId/lists/:listId", async (req, res) => {
-  try {
-    const deletedList = await Kanban.findByIdAndUpdate(
-      req.params.kanbanId,
-      { $pull: { lists: { _id: req.params.listId } } },
-      { new: true }
-    );
-    res.status(200).json(deletedList);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+kanbanRouter.delete(
+  "/delete/boards/:kanbanId/lists/:listId",
+  async (req, res) => {
+    try {
+      const deletedList = await Kanban.findByIdAndUpdate(
+        req.params.kanbanId,
+        { $pull: { lists: { _id: req.params.listId } } },
+        { new: true }
+      );
+      res.status(200).json(deletedList);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // Eliminar una tarjeta de una lista - ✔
-kanbanRouter.delete("/boards/lists/:listId/cards/:cardId", async (req, res) => {
-  try {
-    const deletedCard = await Kanban.findOneAndUpdate(
-      { "lists._id": req.params.listId },
-      { $pull: { "lists.$.cards": { _id: req.params.cardId } } },
-      { new: true }
-    );
-    res.status(200).json(deletedCard);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+kanbanRouter.delete(
+  "/delete/boards/lists/:listId/cards/:cardId",
+  async (req, res) => {
+    try {
+      const deletedCard = await Kanban.findOneAndUpdate(
+        { "lists._id": req.params.listId },
+        { $pull: { "lists.$.cards": { _id: req.params.cardId } } },
+        { new: true }
+      );
+      res.status(200).json(deletedCard);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 // Ruta para reordenar las listas
 kanbanRouter.put("/boards/:kanbanId/lists/reorder", async (req, res) => {

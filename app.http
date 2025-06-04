@@ -74,7 +74,7 @@ Content-Type: application/json
 DELETE http://localhost:3000/boards/lists/682fad84bebe3847962e8be5/cards/682fb46b44c937992b967da7
 
 ### Eliminar una lista
-DELETE http://localhost:3000/boards/682fa9fcdc9c00b7b6a586e7/lists/682faf87e8ffe1cff66e662f
+DELETE http://localhost:3000/delete/lists/6840c6b2b7b6f4d911f1b008
 
 ### Eliminar una tablero - ✔
 DELETE http://localhost:3000/boards/682fb056e8ffe1cff66e663f
