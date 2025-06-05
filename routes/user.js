@@ -59,7 +59,8 @@ userRouter.post("/register", async (req, res) => {
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      // SameSite=None is required for cross-site cookies in production
       maxAge: 3600000,
     });
 
@@ -94,7 +95,7 @@ userRouter.post("/login", async (req, res) => {
     res.cookie("access_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 3600000,
     });
 
