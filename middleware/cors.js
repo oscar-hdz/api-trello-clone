@@ -3,7 +3,10 @@ import cors from "cors";
 export const corsMiddleware = () =>
   cors({
     origin: (origin, callback) => {
-      const acceptedOrigins = ["http://localhost:5173"];
+      const acceptedOrigins = [
+        "http://localhost:5173",
+        "https://clone-trello-ten.vercel.app/",
+      ];
 
       if (acceptedOrigins.includes(origin)) {
         return callback(null, true);
